@@ -1,6 +1,7 @@
-# Airlock with GraphQL
+# GraphQL on REST
 
-With Airlock, you can find listings that meet your dates of choice and the number of beds you'll need. Learn what each place is all about and what amenities it offers, and if you're interested, you can book your stay in one click (provided you have enough space credits in your wallet of course)!
+A GraphQL Server implementation using a RESTful Java Spring Boot application as data source.
+This GraphQL server supports queries, mutations, subscriptions for an issue-tracking web application.
 
 ## How to use this repo
 
@@ -15,7 +16,6 @@ npm install && npm run dev
 | Task                                                      | Time (hours)  |
 | --------------------------------------------------------- | ------------- |
 | Building schema & setup Apollo Server                     | 1             |
-| Initiating & typing resolvers with graphql-codegen        | 1             |
-| Add resolver & dataSource for amenities                   | 1             |
+| Initiating & typing first resolver with graphql-codegen   | 2             |
 | --------------------------------------------------------- | ------------- |
-| Total                                                     | 2             |
+| Total                                                     | 3             |
