@@ -1,0 +1,41 @@
+type Query {
+  "Get all tasks by company and workspace"
+  tasksByCompanyAndWorkspace(companyId: ID!, workspaceId: ID!): [Task!]!
+}
+
+"A task is a unit of work that needs to be done"
+type Task {
+  id: ID!
+
+  title: String!
+  
+  description: String
+  
+  status: String!
+  
+  assigneeId: ID!
+  
+  priority: Int!
+  
+  projectId: ID!
+  
+  workspaceId: ID!
+  
+  startedAt: String
+  
+  endedAt: String
+}
+
+type GetTasksResponse {
+  "The status of the response"
+  status: String!
+  
+  "The HTTP status code of the response"
+  code: Int!
+  
+  "The tasks returned by the query"
+  data: [Task!]!
+  
+  "The errors returned by the query"
+  errors: [String!]
+}
