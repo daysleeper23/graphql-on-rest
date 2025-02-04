@@ -4,7 +4,7 @@ type Query {
 }
 
 type Subscription {
-  taskCreated: Task
+  taskCreated(companyId: ID!, workspaceId: ID!): TaskCreated
 }
 
 type Mutation {
@@ -84,4 +84,14 @@ type GetTasksResponse {
   
   "The errors returned by the query"
   errors: [String!]
+}
+
+type TaskCreated {
+  companyId: ID!
+  workspaceId: ID!
+  task: Task!
+}
+
+type CreatedTaskPayload {
+  taskCreated: TaskCreated
 }

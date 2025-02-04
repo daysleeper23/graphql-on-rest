@@ -19,25 +19,25 @@ import { gql } from "graphql-tag";
 import { resolvers } from "./resolvers";
 import { IssueTrackingAPI } from "./datasources/pm-api";
 
-const app = express();
-const httpServer = createServer(app);
-
-const wsServer = new WebSocketServer({
-  server: httpServer,
-  path: '/subscriptions',
-});
-
-const typeDefs = gql(
-  readFileSync(path.resolve(__dirname, "./schema.graphql"), {
-    encoding: "utf-8",
-  })
-);
-const schema = makeExecutableSchema({ typeDefs, resolvers });
-
-
-const serverCleanup = useServer({ schema }, wsServer);
-
 async function startApolloServer() {
+  const app = express();
+  const httpServer = createServer(app);
+
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: '/',
+  });
+
+  const typeDefs = gql(
+    readFileSync(path.resolve(__dirname, "./schema.graphql"), {
+      encoding: "utf-8",
+    })
+  );
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
+
+
+  const serverCleanup = useServer({ schema }, wsServer);
+
   const server = new ApolloServer({ 
     schema,
     plugins: [
@@ -54,35 +54,40 @@ async function startApolloServer() {
           };
         },
       },
-    ]
+    ],
   });
 
-  const { url } = await startStandaloneServer(server, {
-    context: async ({ req }) => {
-      const { cache } = server;
-
-      // Extract token from Authorization header
-      const token = req.headers.authorization || '';
-
-      return {
-        dataSources: {
-          issueTrackingAPI: new IssueTrackingAPI({ token, cache }),
-        }
-      }
-    }
-  });
+  await server.start();
 
   app.use(
-    '/graphql',
+    '/',
     cors<cors.CorsRequest>(),
     express.json(),
-    expressMiddleware(server)
+    expressMiddleware(server, {
+      context: async ({ req }) => {
+        const { cache } = server;
+  
+        // Extract token from Authorization header
+        const token = req.headers.authorization || '';
+  
+        return {
+          dataSources: {
+            issueTrackingAPI: new IssueTrackingAPI({ token, cache }),
+          }
+        }
+      }
+    })
   )
 
-  console.log(`
-    1. Server is running!
-    2. Query at ${url}
-  `);
+  const PORT = 4000;
+  httpServer.listen(PORT, () => {
+    console.log(`Server is now running on http://localhost:${PORT}`);
+  });
+
+  // console.log(`
+  //   1. Server is running!
+  //   2. Query at ${url}
+  // `);
 }
 
 startApolloServer();
