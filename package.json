@@ -25,7 +25,10 @@
     "@apollo/server": "^4.11.2",
     "@graphql-tools/schema": "^10.0.16",
     "@parcel/watcher": "^2.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
     "graphql": "^16.10.0",
+    "graphql-subscriptions": "^3.0.0",
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^6.0.3",
     "ws": "^8.18.0"
@@ -34,6 +37,7 @@
     "@graphql-codegen/cli": "^5.0.3",
     "@graphql-codegen/typescript": "^4.1.2",
     "@graphql-codegen/typescript-resolvers": "^4.4.1",
+    "@types/cors": "^2.8.17",
     "@types/jest": "^29.0.3",
     "@types/node": "^20.0.0",
     "concurrently": "^8.2.2",

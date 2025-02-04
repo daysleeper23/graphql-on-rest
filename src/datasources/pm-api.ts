@@ -1,7 +1,7 @@
 import { RESTDataSource, AugmentedRequest } from "@apollo/datasource-rest";
 import type { KeyValueCache } from '@apollo/utils.keyvaluecache';
 
-import { GetTasksResponse } from "../types";
+import { GetTasksResponse, SingleTaskResponse, TaskCreate } from "../types";
 
 export class IssueTrackingAPI extends RESTDataSource {
   override baseURL = "https://fs19-pm-be-java.onrender.com/";
@@ -18,5 +18,9 @@ export class IssueTrackingAPI extends RESTDataSource {
 
   getTasksByCompanyAndWorkspace(companyId:string, workspaceId: string): Promise<GetTasksResponse> {
     return this.get<GetTasksResponse>(`/${companyId}/${workspaceId}/tasks`);
+  }
+
+  createTask(companyId: string, projectId: string, task: TaskCreate): Promise<SingleTaskResponse> {
+    return this.post<SingleTaskResponse>(`/${companyId}/${projectId}/tasks`, { body: task });
   }
 }

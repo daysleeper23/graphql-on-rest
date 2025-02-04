@@ -3,6 +3,18 @@ type Query {
   tasksByCompanyAndWorkspace(companyId: ID!, workspaceId: ID!): [Task!]!
 }
 
+type Subscription {
+  taskCreated: Task
+}
+
+type Mutation {
+  createTask(
+    companyId: ID!
+    projectId: ID!
+    task: TaskCreate!
+  ): Task
+}
+
 "A task is a unit of work that needs to be done"
 type Task {
   id: ID!
@@ -24,6 +36,40 @@ type Task {
   startedAt: String
   
   endedAt: String
+}
+
+input TaskCreate {
+  title: String!
+  
+  description: String
+  
+  status: String!
+  
+  assigneeId: ID!
+  
+  priority: Int!
+  
+  projectId: ID!
+  
+  workspaceId: ID!
+  
+  startedAt: String
+  
+  endedAt: String
+}
+
+type SingleTaskResponse {
+  "The status of the response"
+  status: String!
+  
+  "The HTTP status code of the response"
+  code: Int!
+  
+  "The task returned by the query"
+  data: Task
+  
+  "The errors returned by the query"
+  errors: [String!]
 }
 
 type GetTasksResponse {
