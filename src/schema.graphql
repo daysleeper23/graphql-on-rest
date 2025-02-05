@@ -5,6 +5,7 @@ type Query {
 
 type Subscription {
   taskCreated(companyId: ID!, workspaceId: ID!): TaskCreated
+  taskUpdated(companyId: ID!, workspaceId: ID!): TaskUpdated
 }
 
 type Mutation {
@@ -12,6 +13,13 @@ type Mutation {
     companyId: ID!
     projectId: ID!
     task: TaskCreate!
+  ): Task
+
+  updateTask(
+    companyId: ID!
+    projectId: ID!
+    taskId: ID!
+    task: TaskUpdate!
   ): Task
 }
 
@@ -58,6 +66,24 @@ input TaskCreate {
   endedAt: String
 }
 
+input TaskUpdate {
+  title: String
+  
+  description: String
+  
+  status: String
+  
+  assigneeId: ID
+  
+  priority: Int
+  
+  projectId: ID
+  
+  startedAt: String
+  
+  endedAt: String
+}
+
 type SingleTaskResponse {
   "The status of the response"
   status: String!
@@ -94,4 +120,14 @@ type TaskCreated {
 
 type CreatedTaskPayload {
   taskCreated: TaskCreated
+}
+
+type TaskUpdated {
+  companyId: ID!
+  workspaceId: ID!
+  task: Task!
+}
+
+type UpdatedTaskPayload {
+  taskUpdated: TaskUpdated
 }

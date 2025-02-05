@@ -1,7 +1,7 @@
 // import { withFilter } from "graphql-subscriptions";
 import { withFilter } from "graphql-subscriptions";
 import { pubsub } from "./datasources/pm-pubsub";
-import { CreatedTaskPayload, Resolvers } from "./types";
+import { CreatedTaskPayload, Resolvers, UpdatedTaskPayload } from "./types";
 
 export const resolvers: Resolvers = {
   Query: {
@@ -22,7 +22,19 @@ export const resolvers: Resolvers = {
         }
       });
       return newTask.data;
-    }
+    },
+
+    updateTask: async (_, { companyId, projectId, taskId, task }, { dataSources }) => {
+      const updatedTask = await dataSources.issueTrackingAPI.updateTask(companyId, projectId, taskId, task);
+      pubsub.publish('TASK_UPDATED', {
+        taskUpdated: {
+          companyId
+        , workspaceId: updatedTask.data.workspaceId
+        , task: updatedTask.data
+        }
+      });
+      return updatedTask.data;
+    },
   },
 
   Subscription: {
@@ -31,6 +43,15 @@ export const resolvers: Resolvers = {
         () => pubsub.asyncIterableIterator(['TASK_CREATED']),
         (payload: CreatedTaskPayload, { companyId, workspaceId }, _) => {
           return payload.taskCreated.companyId === companyId && payload.taskCreated.workspaceId === workspaceId;
+        }
+      )
+    },
+
+    taskUpdated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterableIterator(['TASK_UPDATED']),
+        (payload: UpdatedTaskPayload, { companyId, workspaceId }, _) => {
+          return payload.taskUpdated.companyId === companyId && payload.taskUpdated.workspaceId === workspaceId;
         }
       )
     }
